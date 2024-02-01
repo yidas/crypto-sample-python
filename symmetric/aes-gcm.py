@@ -13,8 +13,11 @@ def aesGcmEncrypt(plaintext: str, secretKey: str, iv: str=None) -> bytes:
 def aesGcmDecrypt(cipherRawWithTag: bytes, secretKey: str, iv: str, authTag: bytes=None) -> str: 
     ciphertext = cipherRawWithTag[0:-16] 
     authTag = authTag if authTag else cipherRawWithTag[-16:]
-    aes_cipher = AES.new(secretKey.encode(), AES.MODE_GCM, iv.encode()) 
-    return aes_cipher.decrypt(ciphertext).decode() 
+    aesCipher = AES.new(secretKey.encode(), AES.MODE_GCM, iv.encode()) 
+    # decryptedText = aesCipher.decrypt(ciphertext).decode() 
+    decryptedText = aesCipher.decrypt_and_verify(ciphertext, authTag).decode()
+    return decryptedText
+
 
 plaintext = "message to be encrypted 中文"
 # 256 bits (32 bytes) Key => AES-256-GCM
